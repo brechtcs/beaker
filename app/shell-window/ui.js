@@ -35,7 +35,7 @@ export function setup (cb) {
   window.pages = pages
 
   // setup subsystems
-  tabs.setup()
+  // tabs.setup()
   navbar.setup()
   if (window.process.platform == 'win32') {
     win32Titlebar.setup()
