@@ -9,7 +9,7 @@ var darwinMenu = {
       label: 'Preferences',
       accelerator: 'Command+,',
       click (item, win) {
-        if (win) win.webContents.send('command', 'file:new-tab', 'beaker://settings')
+        newTabOrWindow('beaker://settings')
       }
     },
     { type: 'separator' },
@@ -30,8 +30,7 @@ var fileMenu = {
       label: 'New Tab',
       accelerator: 'CmdOrCtrl+T',
       click: function (item, win) {
-        if (win) win.webContents.send('command', 'file:new-tab')
-        else createShellWindow()
+        newTabOrWindow()
       }
     },
     {
@@ -52,7 +51,7 @@ var fileMenu = {
       click: function (item, win) {
         if (win) {
           dialog.showOpenDialog({ title: 'Open file...', properties: ['openFile', 'createDirectory'] }, files => {
-            if (files && files[0]) { win.webContents.send('command', 'file:new-tab', 'file://' + files[0]) }
+            if (files && files[0]) { newTabOrWindow('file://' + files[0]) }
           })
         }
       }
@@ -208,7 +207,7 @@ var historyMenu = {
       label: 'Show Full History',
       accelerator: showHistoryAccelerator,
       click: function (item, win) {
-        if (win) win.webContents.send('command', 'file:new-tab', 'beaker://history')
+        newTabOrWindow('beaker://history')
       }
     }
   ]
@@ -259,17 +258,17 @@ var beakerDevMenu = {
   }, {
     label: 'Open Archives Debug Page',
     click: function (item, win) {
-      if (win) win.webContents.send('command', 'file:new-tab', 'beaker://internal-archives/')
+      newTabOrWindow('beaker://internal-archives/')
     }
   }, {
     label: 'Open Dat-DNS Cache Page',
     click: function (item, win) {
-      if (win) win.webContents.send('command', 'file:new-tab', 'beaker://dat-dns-cache/')
+      newTabOrWindow('beaker://dat-dns-cache/')
     }
   }, {
     label: 'Open Debug Log Page',
     click: function (item, win) {
-      if (win) win.webContents.send('command', 'file:new-tab', 'beaker://debug-log/')
+      newTabOrWindow('beaker://debug-log/')
     }
   }, {
     label: 'Toggle Shell-Window DevTools',
@@ -287,19 +286,19 @@ var helpMenu = {
       label: 'Help',
       accelerator: 'F1',
       click: function (item, win) {
-        if (win) win.webContents.send('command', 'file:new-tab', 'https://beakerbrowser.com/docs/')
+        newTabOrWindow('https://beakerbrowser.com/docs/')
       }
     },
     {
       label: 'Report Bug',
       click: function (item, win) {
-        if (win) win.webContents.send('command', 'file:new-tab', 'https://github.com/beakerbrowser/beaker/issues')
+        newTabOrWindow('https://github.com/beakerbrowser/beaker/issues')
       }
     },
     {
       label: 'Mailing List',
       click: function (item, win) {
-        if (win) win.webContents.send('command', 'file:new-tab', 'https://groups.google.com/forum/#!forum/beaker-browser')
+        newTabOrWindow('https://groups.google.com/forum/#!forum/beaker-browser')
       }
     }
   ]
@@ -310,7 +309,7 @@ if (process.platform !== 'darwin') {
     label: 'About',
     role: 'about',
     click: function (item, win) {
-      if (win) win.webContents.send('command', 'file:new-tab', 'beaker://settings')
+      newTabOrWindow('beaker://settings')
     }
   })
 }
@@ -320,4 +319,9 @@ export default function buildWindowMenu () {
   if (process.platform === 'darwin') menus.unshift(darwinMenu)
   menus.push(beakerDevMenu) // TODO: remove in release build?
   return menus
+}
+
+function newTabOrWindow (location) {
+    if (false) win.webContents.send('command', 'file:new-tab', location)
+    else createShellWindow(location)
 }
